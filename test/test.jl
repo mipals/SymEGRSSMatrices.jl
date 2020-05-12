@@ -1,15 +1,5 @@
-
+using SymEGRSSMatrices
 using LinearAlgebra
-import LinearAlgebra: cholesky,inv!, tr, mul!, Adjoint, det, logdet, dot,
-                  Factorization,tril,triu, ldiv!
-import Base: inv, size, eltype, getindex, getproperty
-
-
-# Matrices
-include("SymEGRSSMatrix.jl")
-include("SymEGRSSCholesky.jl")
-include("SymEGRQSMatrix.jl")
-include("SymEGRQSCholesky.jl")
 
 
 
@@ -28,18 +18,20 @@ include("spline_kernel.jl")
 t = Vector(0.1:0.1:1); p = 2;
 xt = ones(length(t))
 # Creating generators U,V that result in a positive-definite matrix Σ
-U, V = spline_kernel(t, p);
-Σ    = spline_kernel_matrix(U, V);
-chol = cholesky(Σ)
-
+U, V = SymEGRSSMatrices.pline_kernel(t, p);
 # Creating a symmetric extended generator representable semiseperable matrix
 K = SymEGRSSMatrix(U,V)
+# Creating dense replicas
+Σ    = Matrix(K);
+chol = cholesky(Σ);
+
 # Calculating its Cholesky factorization
 L = cholesky(K)
 
 
 
 Kq = SymEGRQSMatrix(U,V,ones(length(t)));
+Σq = Matrix(Kq)
 Kq*xt
 Kq'*xt
 Lq = cholesky(Kq);
