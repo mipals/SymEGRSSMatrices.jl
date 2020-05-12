@@ -8,7 +8,7 @@
 ## Description
 A package for efficiently computing with symmetric extended generator representable semiseparable matrices and a variant thereof. In short this means matrices of the form
 
-<img src="https://latex.codecogs.com/svg.latex?\dpi{100}&space;K=\text{\textbf{tril}}(UV^T)&space;&plus;&space;\text{\textbf{triu}}(V^TU,1),&\quad%20U,V\in\mathbb{R}^{n\times%20p}" title="K=\text{\textbf{tril}}(UV^T) + \text{\textbf{triu}}(VU^T,1)" />
+<img src="https://latex.codecogs.com/svg.latex?\dpi{100}&space;K=\text{\textbf{tril}}(UV^T)&space;&plus;&space;\text{\textbf{triu}}(VU^T,1),&\quad%20U,V\in\mathbb{R}^{n\times%20p}" title="K=\text{\textbf{tril}}(UV^T) + \text{\textbf{triu}}(VU^T,1)" />
 
 as well as
 
