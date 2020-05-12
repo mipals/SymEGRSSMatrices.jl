@@ -77,14 +77,14 @@ Furthermore from the ```SymEGRSSMatrix``` structure we can efficiently compute t
 ```julia 
 julia> L = cholesky(K); # Computing the Cholesky factorization of K
 ```
-Now ```L``` represents a Cholesky factorization with the form ```L = tril(UW')```, requiring only ```O(np)``` storage.
+Now ```L``` represents a Cholesky factorization with of form ```L = tril(UW')```, requiring only ```O(np)``` storage. 
 
 A struct for the dealing with symmetric matrices of the form, ```K = tril(UV') + triu(VU',1) + diag(d)``` called ```SymEGRQSMatrix``` is also implemented. The usage is similar to that of ```SymEGRSSMatrix``` and can be created as follows
 ```julia
 julia> U, V = SymEGRSSMatrices.spline_kernel(Vector(0.1:0.01:1), 2); # Creating input such that K is positive definite
 julia> K = SymEGRQSMatrix(U,V,rand(size(U,1)); # Symmetric generator representable semiseparable matrix + diagonal
 ```
-The Cholesky factorization of this matrix can be computed using ```SymEGRQSCholesky```. Note however here that ```L``` represents a matrix of the form ```L = tril(UW',-1) + diag(c)```
+The Cholesky factorization of this matrix can be computed using ```cholesky```. Note however here that ```L``` represents a matrix of the form ```L = tril(UW',-1) + diag(c)```
 
 ## Benchmarks
 ### Computing Cholesky factorization of ```K = tril(UV') + triu(VU',1)```
