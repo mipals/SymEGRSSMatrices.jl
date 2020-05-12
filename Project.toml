@@ -1,0 +1,16 @@
+name = "SymEGRSSMatrices"
+uuid = "a00c6843-0c36-455c-85e1-48881b223ce3"
+authors = ["Mikkel Paltorp Schmitt"]
+version = "0.1.0"
+
+[deps]
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+
+[compat]
+julia = "1.4"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
