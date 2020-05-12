@@ -21,6 +21,7 @@ A more in-depth descriptions of the algorithms can be found in [1] or [here](htt
 ## Usage
 First we need to create generators U and V that represent the symmetric matrix, ```K = tril(UV') + triu(VU',1)``` as well a test vector ```x```.
 ```julia
+julia> using SymEGRSSMatrices
 julia> U, V = SymEGRSSMatrices.spline_kernel(Vector(0.1:0.01:1), 2); # Creating input such that K is positive definite
 julia> K = SymEGRSSMatrix(U,V); # Symmetric generator representable semiseparable matrix
 julia> x = ones(K.n); # Test vector
