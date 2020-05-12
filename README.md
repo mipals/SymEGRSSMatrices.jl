@@ -24,7 +24,7 @@ First we need to create generators U and V that represent the symmetric matrix, 
 julia> using SymEGRSSMatrices
 julia> U, V = SymEGRSSMatrices.spline_kernel(Vector(0.1:0.01:1), 2); # Creating input such that K is positive definite
 julia> K = SymEGRSSMatrix(U,V); # Symmetric generator representable semiseparable matrix
-julia> x = ones(K.n); # Test vector
+julia> x = ones(size(K,1)); # Test vector
 ```
 We can now compute products with ```K``` and ```K'```. The result are the same as ```K``` is symmetric.
 ```julia
