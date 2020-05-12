@@ -19,3 +19,8 @@ xt = ones(K.n);
 # Testing logdet and det
 @test isapprox(logdet(L), logdet(chol), atol=1e-10)
 @test isapprox(det(L), det(chol), atol=1e-10)
+
+
+# Testing show
+@test isapprox(L.L, tril(getfield(L,:U)*getfield(L,:W)'))
+@test isapprox(L.U, triu(getfield(L,:W)*getfield(L,:U)'))

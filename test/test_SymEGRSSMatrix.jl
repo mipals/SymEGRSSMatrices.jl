@@ -13,5 +13,4 @@ Kfull = Matrix(K);
 @test isapprox(K'*x, Kfull'*x, atol = 1e-6)
 
 # Testing linear solves
-#@test isapprox(K*(K\x),x, atol=1e-6)
-#@test isapprox(K'*(K'\x),x, atol=1e-6)
+@test isapprox(Matrix(K), tril(K.U*K.V') + triu(K.V*K.U',1))

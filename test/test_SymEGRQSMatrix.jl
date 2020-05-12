@@ -12,3 +12,7 @@ Kfull = Matrix(K);
 
 #  Testing multiplication with the adjoint operator
 @test isapprox(K'*x, Kfull'*x, atol = 1e-6)
+
+
+# Testing show
+@test isapprox(Matrix(K), tril(K.U*K.V') + triu(K.V*K.U',1) + Diagonal(K.d))

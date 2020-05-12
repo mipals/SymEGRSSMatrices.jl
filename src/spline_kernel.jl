@@ -45,7 +45,3 @@ function spline_kernel(t::Array{Float64}, p::Int)
 
     return U,V;
 end
-
-function spline_kernel_matrix(U::Array{Float64}, V::Array{Float64})
-    return tril(U*V') + triu(V*U',1);
-end

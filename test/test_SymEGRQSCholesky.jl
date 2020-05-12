@@ -24,3 +24,9 @@ x = randn(n);
 @test isapprox(det(L), det(chol), atol=1e-10)
 
 # Testing traces
+
+
+
+# Testing show
+@test isapprox(L.L, tril(getfield(L,:U)*getfield(L,:W)',-1) + Diagonal(getfield(L,:d)))
+@test isapprox(L.U, triu(getfield(L,:W)*getfield(L,:U)',1) + Diagonal(getfield(L,:d)))

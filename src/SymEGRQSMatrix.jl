@@ -39,7 +39,7 @@ Base.propertynames(F::SymEGRQSMatrix, private::Bool=false) =
 
 
 ########################################################################
-#### Linear Algebra routines 							   			####
+#### Linear Algebra routines	                                    ####
 ########################################################################
 
 #### Matrix-matrix product ####

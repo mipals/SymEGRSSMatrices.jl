@@ -5,8 +5,8 @@ struct SymEGRQSCholesky{T,UT<:AbstractMatrix,WT<:AbstractMatrix,dT<:AbstractArra
     n::Int
     p::Int
     function SymEGRQSCholesky{T,UT,WT,dT}(U,W,d,n,p) where
-			 {T,UT<:AbstractMatrix,WT<:AbstractMatrix,dT<:AbstractArray}
-        Un, Um = size(U)
+		{T,UT<:AbstractMatrix,WT<:AbstractMatrix,dT<:AbstractArray}
+		Un, Um = size(U)
 		Wn, Wm = size(W)
 		(Un == Wn && Um == Wm && Un == length(d)) || throw(DimensionMismatch())
         new(U,W,d,n,p)
@@ -33,9 +33,9 @@ function dss_create_wdbar(U::AbstractArray, V::AbstractArray, d::AbstractArray)
 end
 
 function cholesky(K::SymEGRQSMatrix{T,UT,VT,dT}) where
-		{T,UT<:AbstractMatrix,VT<:AbstractMatrix,dT<:AbstractArray}
+	{T,UT<:AbstractMatrix,VT<:AbstractMatrix,dT<:AbstractArray}
 	W, dbar = dss_create_wdbar(K.U,K.V,K.d)
-    SymEGRQSCholesky{T,typeof(K.U),typeof(W),typeof(dbar)}(K.U,W,dbar,K.n,K.p)
+	SymEGRQSCholesky{T,typeof(K.U),typeof(W),typeof(dbar)}(K.U,W,dbar,K.n,K.p)
 end
 
 
