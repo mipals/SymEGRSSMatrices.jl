@@ -11,14 +11,10 @@ M*ones(M.n,2)
 M'*ones(M.n,2)
 
 
-
-
-
-include("spline_kernel.jl")
 t = Vector(0.1:0.1:1); p = 2;
 xt = ones(length(t))
 # Creating generators U,V that result in a positive-definite matrix Σ
-U, V = SymEGRSSMatrices.pline_kernel(t, p);
+U, V = SymEGRSSMatrices.spline_kernel(t, p);
 # Creating a symmetric extended generator representable semiseperable matrix
 K = SymEGRSSMatrix(U,V)
 # Creating dense replicas
@@ -32,6 +28,8 @@ L = cholesky(K)
 
 Kq = SymEGRQSMatrix(U,V,ones(length(t)));
 Σq = Matrix(Kq)
+
+
 Kq*xt
 Kq'*xt
 Lq = cholesky(Kq);

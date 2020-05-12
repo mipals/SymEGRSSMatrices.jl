@@ -64,3 +64,4 @@ mul!(y::AbstractVecOrMat, K::SymEGRSSMatrix, x::AbstractVecOrMat) =
 		symegrss_mul!(y,K,x)
 mul!(y::AbstractVecOrMat, K::Adjoint{<:Any,<:SymEGRSSMatrix}, x::AbstractVecOrMat) =
 		symegrss_mul!(y,K.parent,x)
+(\)(K::SymEGRSSMatrix, x::AbstractVecOrMat) = ldiv!(cholesky(K), x)
