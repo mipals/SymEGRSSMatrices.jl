@@ -4,7 +4,7 @@ n = length(t);
 
 # Creating a test matrix Σ = tril(UV') + triu(VU',1) that is PSD
 p = 2;
-U, V = SymEGRSSMatrices.spline_kernel(t, p);
+U, V = SymEGRSSMatrices.spline_kernel(t, p)
 # Creating a symmetric exended generator representable semiseperable matrix
 K  = SymEGRQSMatrix(U,V,ones(n))
 # Creating a dense replica
@@ -14,7 +14,7 @@ chol = cholesky(Σ)
 # Calculating its Cholesky factorization
 L = cholesky(K)
 # Creating a test vector
-x = randn(n);
+x = randn(n)
 
 # Testing inverses (Using Cholesky factorizations)
 @test isapprox(L\x, chol\x, atol=1e-6)

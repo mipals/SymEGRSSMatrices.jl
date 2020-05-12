@@ -2,11 +2,11 @@
 t = Vector(0.1:0.1:1); p = 2;
 
 # Creating generators U,V that result in a positive-definite matrix Σ
-U, V = SymEGRSSMatrices.spline_kernel(t, p);
+U, V = SymEGRSSMatrices.spline_kernel(t, p)
 
-K = SymEGRQSMatrix(U,V,ones(length(t)));
-x = randn(length(t));
-Kfull = Matrix(K);
+K = SymEGRQSMatrix(U,V,ones(length(t)))
+x = randn(length(t))
+Kfull = Matrix(K)
 
 # Testing multiplication
 @test isapprox(K*x, Kfull*x, atol = 1e-6)

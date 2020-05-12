@@ -2,16 +2,16 @@
 t = Vector(0.1:0.1:1); p = 2;
 
 # Creating generators U,V that result in a positive-definite matrix Σ
-U, V = SymEGRSSMatrices.spline_kernel(t, p);
-K = SymEGRSSMatrix(U,V);
-Σ    = Matrix(K);
-chol = cholesky(Σ);
+U, V = SymEGRSSMatrices.spline_kernel(t, p)
+K = SymEGRSSMatrix(U,V)
+Σ    = Matrix(K)
+chol = cholesky(Σ)
 
 # Creating a symmetric extended generator representable semiseperable matrix
 # Calculating its Cholesky factorization
 L = cholesky(K)
 # Creating a test vector
-xt = ones(K.n);
+xt = ones(size(K,1))
 
 # Testing inverses (Using Cholesky factorizations)
 @test isapprox(chol\xt, L\xt, atol=1e-6)
