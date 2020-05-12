@@ -62,6 +62,14 @@ function dss_mul_mat!(Y::Array, K::SymEGRQSMatrix, X::Array)
 	return Y
 end
 
+#### Log-determinant ####
+logdet(K::SymEGRQSMatrix) = logdet(cholesky(K))
+
+#### Determinant ####
+det(K::SymEGRQSMatrix) = det(cholesky(K))
+
+
+
 
 mul!(y::AbstractVecOrMat, K::SymEGRQSMatrix, x::AbstractVecOrMat) =
 	dss_mul_mat!(y,K,x)

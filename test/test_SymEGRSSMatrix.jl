@@ -8,12 +8,14 @@ Kfull = Matrix(K);
 
 # Testing multiplication
 @test isapprox(K*x, Kfull*x, atol = 1e-6)
-
-# Testing multiplication with the adjoint operator
 @test isapprox(K'*x, Kfull'*x, atol = 1e-6)
 
 # Testing linear solves
 @test isapprox(K\x, Kfull\x,atol=1e-6)
+
+# Testing (log)determinant
+@test isapprox(logdet(K), logdet(Kfull), atol=1e-6)
+@test isapprox(det(K), det(Kfull), atol=1e-6)
 
 # Testing show
 @test isapprox(Matrix(K), tril(K.U*K.V') + triu(K.V*K.U',1))
