@@ -1,7 +1,6 @@
 using SymEGRSSMatrices
 using LinearAlgebra
 using Test
-include("spline_kernel.jl")
 
 @testset "SymEGRSSMatrices.jl" begin
     include("test_SymEGRSSMatrix.jl")

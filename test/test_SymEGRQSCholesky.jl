@@ -4,12 +4,13 @@ n = length(t);
 
 # Creating a test matrix Σ = tril(UV') + triu(VU',1) that is PSD
 p = 2;
-U, V = spline_kernel(t, p);
-Σ    = spline_kernel_matrix(U, V) + I;
-chol = cholesky(Σ)
-
+U, V = SymEGRSSMatrices.spline_kernel(t, p);
 # Creating a symmetric exended generator representable semiseperable matrix
 K  = SymEGRQSMatrix(U,V,ones(n))
+# Creating a dense replica
+Σ    = Matrix(K)
+chol = cholesky(Σ)
+
 # Calculating its Cholesky factorization
 L = cholesky(K)
 # Creating a test vector

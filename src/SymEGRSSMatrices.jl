@@ -13,6 +13,8 @@ include("SymEGRSSCholesky.jl")
 include("SymEGRQSMatrix.jl")
 include("SymEGRQSCholesky.jl")
 
+# Extra functions
+include("spline_kernel.jl")
 
 
 

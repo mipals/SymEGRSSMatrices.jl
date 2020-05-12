@@ -3,7 +3,6 @@ p = 5;
 U = randn(n,p);
 V = randn(n,p);
 
-
 K = SymEGRQSMatrix(U,V,ones(n));
 x = randn(n);
 Kfull = Matrix(K);
