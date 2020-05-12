@@ -57,8 +57,12 @@ julia> K'*x
  12.31510733333333   
  12.484138499999995  
  12.65317083333333  
+```
 
-julia> K*(K\x)
+Furthermore from the ```SymEGRSSMatrix``` structure we can efficiently compute the Cholesky factorization as
+```julia 
+julia> L = cholesky(K); # Computing the Cholesky factorization of K
+julia> K*(L\x)
 91×1 Array{Float64,2}:
  1.0000000000000036
  0.9999999999999982
@@ -72,11 +76,6 @@ julia> K*(K\x)
  0.9999999999996028
  0.9999999999995898
  0.9999999999995764
-```
-
-Furthermore from the ```SymEGRSSMatrix``` structure we can efficiently compute the Cholesky factorization as
-```julia 
-julia> L = cholesky(K); # Computing the Cholesky factorization of K
 ```
 Now ```L``` represents a Cholesky factorization with of form ```L = tril(UW')```, requiring only ```O(np)``` storage. 
 
