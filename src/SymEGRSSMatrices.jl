@@ -3,7 +3,7 @@ module SymEGRSSMatrices
 import LinearAlgebra: cholesky,inv!, tr, mul!, Adjoint, det, logdet, dot,
                       Factorization, tril, triu, ldiv!,
                       LowerTriangular, UpperTriangular, Diagonal
-import Base: \, inv, size, eltype, getindex, getproperty
+import Base: \, inv, size, eltype, Matrix, getindex, getproperty
 
 export SymEGRSSMatrix, SymEGRSSCholesky,
        SymEGRQSMatrix, SymEGRQSCholesky

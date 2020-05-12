@@ -15,7 +15,7 @@ struct SymEGRQSMatrix{T,UT<:AbstractArray,VT<:AbstractArray,dT<:AbstractArray} <
 	end
 end
 
-# Constuctors
+# Constuctor
 SymEGRQSMatrix(U::AbstractArray{T,N}, V::AbstractArray{T,N}, d::AbstractArray{T,M}) where {T,N,M}=
 	SymEGRQSMatrix{T,typeof(U),typeof(V),typeof(d)}(U,V,d,size(V,1),size(V,2));
 
@@ -67,8 +67,6 @@ logdet(K::SymEGRQSMatrix) = logdet(cholesky(K))
 
 #### Determinant ####
 det(K::SymEGRQSMatrix) = det(cholesky(K))
-
-
 
 
 mul!(y::AbstractVecOrMat, K::SymEGRQSMatrix, x::AbstractVecOrMat) =
