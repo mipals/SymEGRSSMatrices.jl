@@ -6,7 +6,8 @@ import LinearAlgebra: cholesky,inv!, tr, mul!, Adjoint, det, logdet, dot,
 import Base: \, inv, size, eltype, Matrix, getindex, getproperty
 
 export SymEGRSSMatrix, SymEGRSSCholesky,
-       SymEGRQSMatrix, SymEGRQSCholesky
+       SymEGRQSMatrix, SymEGRQSCholesky,
+       trinv
 
 # Matrices
 include("SymEGRSSMatrix.jl")

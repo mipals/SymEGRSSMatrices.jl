@@ -139,7 +139,8 @@ function dss_create_yz(U::AbstractArray, W::AbstractArray,
     dss_forward!(Y, U, W, dbar, U)
     dssa_backward!(Z, U, W, dbar, W)
     # Probably best not to use inv
-    return Y, Z*inv(U'*Z - I)
+    return Y, Z*inv(U'*Z - Diagonal(ones(m)))
+	#return Y, Z*((U'*Z - Diagonal(ones(m)))\Diagonal(ones(m)))
 end
 
 function fro_norm_L(L::SymEGRQSCholesky)

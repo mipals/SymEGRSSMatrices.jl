@@ -1,5 +1,5 @@
 # Removing t = 0, such that Σ is invertible
-t = Vector(0.1:0.1:1); p = 2;
+t = Vector(0.1:0.1:10); p = 2;
 
 # Creating generators U,V that result in a positive-definite matrix Σ
 U, V = SymEGRSSMatrices.spline_kernel(t, p)
@@ -14,12 +14,12 @@ L = cholesky(K)
 xt = ones(size(K,1))
 
 # Testing inverses (Using Cholesky factorizations)
-@test isapprox(chol\xt, L\xt, atol=1e-6)
+@test chol\xt ≈ L\xt
 
 # Testing logdet and det
-@test isapprox(logdet(L), logdet(chol), atol=1e-10)
-@test isapprox(det(L), det(chol), atol=1e-10)
+@test logdet(L) ≈ logdet(chol)
+@test det(L) ≈ det(chol)
 
 # Testing show
-@test isapprox(L.L, tril(getfield(L,:U)*getfield(L,:W)'))
-@test isapprox(L.U, triu(getfield(L,:W)*getfield(L,:U)'))
+@test L.L ≈ tril(getfield(L,:U)*getfield(L,:W)')
+@test L.U ≈ triu(getfield(L,:W)*getfield(L,:U)')
