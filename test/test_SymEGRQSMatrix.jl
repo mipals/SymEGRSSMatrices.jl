@@ -2,7 +2,7 @@
 t = Vector(0.1:0.1:100); p = 2;
 
 # Creating generators U,V that result in a positive-definite matrix Σ
-U, V = SymEGRSSMatrices.spline_kernel(t, p)
+U, V = spline_kernel(t, p)
 
 K = SymEGRQSMatrix(U,V,ones(size(U,1)))
 x = randn(size(K,1))

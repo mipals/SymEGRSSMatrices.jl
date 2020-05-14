@@ -44,6 +44,7 @@ end
 ########################################################################
 Matrix(K::SymEGRQSCholesky) = getproperty(K,:L)
 size(K::SymEGRQSCholesky) = (K.n, K.n)
+size(K::SymEGRQSCholesky,d::Int) = (1 <= d && d <=2) ? size(K)[d] : throw(DimensionMismatch())
 
 function getindex(K::SymEGRQSCholesky, i::Int, j::Int)
 	i > j && return dot(K.U[i,:], K.W[j,:])

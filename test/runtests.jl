@@ -2,6 +2,8 @@ using SymEGRSSMatrices
 using LinearAlgebra
 using Test
 
+import SymEGRSSMatrices: spline_kernel
+
 @testset "SymEGRSSMatrix" begin
     include("test_SymEGRSSMatrix.jl")
 end

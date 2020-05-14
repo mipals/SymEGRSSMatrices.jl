@@ -1,6 +1,6 @@
 t = Vector(0.1:0.1:10)
 n = length(t); p = 2;
-U, V = SymEGRSSMatrices.spline_kernel(t, p);
+U, V = spline_kernel(t, p);
 
 K = SymEGRSSMatrix(U,V)
 x = randn(size(K,1));

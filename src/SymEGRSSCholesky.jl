@@ -37,6 +37,7 @@ cholesky(K::SymEGRSSMatrix{T,UT,VT}) where {T,UT<:AbstractMatrix,VT<:AbstractMat
 Matrix(K::SymEGRSSCholesky) = getproperty(K,:L)
 
 size(K::SymEGRSSCholesky) = (K.n, K.n)
+size(K::SymEGRSSCholesky,d::Int) = (1 <= d && d <=2) ? size(K)[d] : throw(DimensionMismatch())
 
 function getindex(K::SymEGRSSCholesky, i::Int, j::Int)
 	U = getfield(K,:U);
