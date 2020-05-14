@@ -51,7 +51,7 @@ function dss_mul_mat!(Y::Array, K::SymEGRQSMatrix, X::Array)
     mx = size(X,2);
     Vbar = zeros(m,mx);
     Ubar = U'*X;
-    for i = 1:n
+    @inbounds for i = 1:n
         tmpV = V[i,:];
         tmpU = U[i,:];
         tmpX = X[i:i,:];

@@ -47,8 +47,10 @@ size(K::SymEGRQSCholesky) = (K.n, K.n)
 size(K::SymEGRQSCholesky,d::Int) = (1 <= d && d <=2) ? size(K)[d] : throw(DimensionMismatch())
 
 function getindex(K::SymEGRQSCholesky, i::Int, j::Int)
-	i > j && return dot(K.U[i,:], K.W[j,:])
-	i == j && return dot(K.U[i,:], K.W[j,:]) + K.d[i]
+	U = getfield(K,:U);
+	W = getfield(K,:W);
+	i > j && return dot(U[i,:], W[j,:])
+	i == j && return K.d[i]
 	return 0
 end
 
@@ -85,7 +87,7 @@ function dss_forward!(X::AbstractArray,U::AbstractArray,W::AbstractArray,
     n, m = size(U)
     mx = size(B,2)
     Wbar = zeros(m,mx);
-    for i = 1:n
+    @inbounds for i = 1:n
         tmpU = U[i,:];
         tmpW = W[i,:];
         X[i:i,:] = (B[i:i,:] - tmpU'*Wbar)/ds[i];
@@ -98,7 +100,7 @@ function dssa_backward!(X::AbstractArray,U::AbstractArray,W::AbstractArray,
     n, m = size(U)
     mx = size(B,2)
     Ubar = zeros(m,mx);
-    for i = n:-1:1
+    @inbounds for i = n:-1:1
         tmpU = U[i,:];
         tmpW = W[i,:];
         X[i:i,:] = (B[i:i,:] - tmpW'*Ubar)/ds[i];
@@ -123,7 +125,7 @@ function squared_norm_cols(U::AbstractArray,W::AbstractArray,
     n, m = size(U)
     P = zeros(m, m)
     c = zeros(n)
-    for i = n:-1:1
+    @inbounds for i = n:-1:1
         tmpW = W[i,:]
         tmpU = U[i,:]
         c[i]  = dbar[i]^2 + tmpW'*P*tmpW
@@ -165,7 +167,7 @@ function tr(Ky::SymEGRQSCholesky, K::SymEGRSSMatrix)
 	b = 0;
 	P = zeros(p,p);
 	R = zeros(p,p);
-	for k = 1:Ky.n
+	@inbounds for k = 1:Ky.n
 		yk = Y[k,:];
 		zk = Z[k,:];
 		uk = U[k,:];

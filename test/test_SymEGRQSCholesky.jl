@@ -32,3 +32,6 @@ M = SymEGRSSMatrix(U,V);
 @test L.L ≈ tril(getfield(L,:U)*getfield(L,:W)',-1) + Diagonal(getfield(L,:d))
 @test L.U ≈ triu(getfield(L,:W)*getfield(L,:U)',1) + Diagonal(getfield(L,:d))
 @test Matrix(L) ≈ tril(getfield(L,:U)*getfield(L,:W)',-1) + Diagonal(getfield(L,:d))
+@test L[3,1] ≈ chol.L[3,1]
+@test L[2,2] ≈ chol.L[2,2]
+@test L[1,3] ≈ chol.L[1,3]

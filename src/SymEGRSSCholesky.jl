@@ -79,7 +79,7 @@ function ss_forward!(X::AbstractArray, U::AbstractArray,
     n, m = size(U)
     mx = size(B,2)
     Wbar = zeros(m, mx);
-    for i = 1:n
+    @inbounds for i = 1:n
         tmpU = U[i,:]
         tmpW = W[i,:]
         X[i,:] = (B[i:i,:] - tmpU'*Wbar)./(tmpU'*tmpW);
@@ -93,7 +93,7 @@ function ssa_backward!(X::AbstractArray, U::AbstractArray,
     n, m = size(U)
     mx = size(B,2)
     Ubar = zeros(m,mx);
-    for i = n:-1:1
+    @inbounds for i = n:-1:1
         tmpU = U[i,:];
         tmpW = W[i,:];
         X[i,:] = (B[i:i,:] - tmpW'*Ubar)/(tmpU'*tmpW);

@@ -13,6 +13,10 @@ L = cholesky(K)
 # Creating a test vector
 xt = ones(size(K,1))
 
+# Testing size
+@test size(L,1) == length(t)
+@test size(L,2) == length(t)
+
 # Testing inverses (Using Cholesky factorizations)
 @test chol\xt ≈ L\xt
 
@@ -24,3 +28,6 @@ xt = ones(size(K,1))
 @test L.L ≈ tril(getfield(L,:U)*getfield(L,:W)')
 @test L.U ≈ triu(getfield(L,:W)*getfield(L,:U)')
 @test Matrix(L) ≈ tril(getfield(L,:U)*getfield(L,:W)')
+@test L[3,1] ≈ chol.L[3,1]
+@test L[2,2] ≈ chol.L[2,2]
+@test L[1,3] ≈ chol.L[1,3]
