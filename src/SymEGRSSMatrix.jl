@@ -1,35 +1,35 @@
 struct SymEGRSSMatrix{T,UT<:AbstractArray,VT<:AbstractArray} <: AbstractMatrix{T}
-	U::UT
-	V::VT
+	Ut::UT
+	Vt::VT
 	n::Int
 	p::Int
 
-	function SymEGRSSMatrix{T,UT,VT}(U,V,n,p) where
+	function SymEGRSSMatrix{T,UT,VT}(Ut,Vt,n,p) where
 				{T,UT<:AbstractArray,VT<:AbstractArray}
-		Un, Um = size(U)
-		Vn, Vm = size(V)
+		Un, Um = size(Ut)
+		Vn, Vm = size(Vt)
 		(Un == Vn && Um == Vm) || throw(DimensionMismatch())
-		new(U,V,n,p)
+		new(Ut,Vt,n,p)
 	end
 end
 
-SymEGRSSMatrix(U::AbstractArray{T,N},V::AbstractArray{T,N}) where {T,N}  =
-	SymEGRSSMatrix{T,typeof(U),typeof(V)}(U,V,size(U)[1],size(U)[2])
+SymEGRSSMatrix(Ut::AbstractArray{T,N},Vt::AbstractArray{T,N}) where {T,N}  =
+	SymEGRSSMatrix{T,typeof(Ut),typeof(Vt)}(Ut,Vt,size(Ut)[2],size(Ut)[1])
 
 ########################################################################
 #### Helpful properties. Not nessecarily computionally efficient    ####
 ########################################################################
-Matrix(K::SymEGRSSMatrix) = tril(K.U*K.V') + triu(K.V*K.U',1)
+Matrix(K::SymEGRSSMatrix) = tril(K.Ut'*K.Vt) + triu(K.Vt'*K.Ut,1)
 
 size(K::SymEGRSSMatrix) = (K.n,K.n)
 
 function getindex(K::SymEGRSSMatrix{T}, i::Int, j::Int) where T
-	i > j && return dot(K.U[i,:],K.V[j,:])
-	return dot(K.V[i,:],K.U[j,:])
+	i > j && return dot(K.Ut[:,i],K.Vt[:,j])
+	return dot(K.Vt[:,i],K.Ut[:,j])
 end
 
 Base.propertynames(F::SymEGRSSMatrix, private::Bool=false) =
-    ( private ? fieldnames(typeof(F)) : ())
+    (private ? fieldnames(typeof(F)) : ())
 
 ########################################################################
 #### Linear Algebra routines 							   			####
@@ -37,16 +37,16 @@ Base.propertynames(F::SymEGRSSMatrix, private::Bool=false) =
 function symegrss_mul!(Y::AbstractVecOrMat{T}, K::SymEGRSSMatrix{Q,UT,VT},
 		  X::AbstractVecOrMat{S}) where
 		  {T,Q,UT<:AbstractArray,VT<:AbstractArray,S}
-	U = K.U;
-	V = K.V;
+	Ut = K.Ut;
+	Vt = K.Vt;
 	n = K.n;
 	m = K.p;
     mx = size(X,2);
     Vbar = zeros(m,mx);
-    Ubar = U'*X;
+    Ubar = Ut*X;
     @inbounds for i = 1:n
-        tmpV = V[i,:];
-        tmpU = U[i,:];
+        tmpV = Vt[:,i];
+        tmpU = Ut[:,i];
         Ubar -= tmpU .* X[i:i,:];
         Vbar += tmpV .* X[i:i,:];
         Y[i,:] = Vbar'*tmpU + Ubar'*tmpV;
@@ -64,4 +64,7 @@ mul!(y::AbstractVecOrMat, K::SymEGRSSMatrix, x::AbstractVecOrMat) =
 		symegrss_mul!(y,K,x)
 mul!(y::AbstractVecOrMat, K::Adjoint{<:Any,<:SymEGRSSMatrix}, x::AbstractVecOrMat) =
 		symegrss_mul!(y,K.parent,x)
-(\)(K::SymEGRSSMatrix, x::AbstractVecOrMat) = ldiv!(cholesky(K), x)
+function (\)(K::SymEGRSSMatrix, x::AbstractVecOrMat)
+	L = cholesky(K);
+	return L'\(L\x)
+end
