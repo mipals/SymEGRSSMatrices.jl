@@ -82,7 +82,7 @@ Now ```L``` represents a Cholesky factorization with of form ```L = tril(UW')```
 
 A struct for the dealing with symmetric matrices of the form, ```K = tril(UV') + triu(VU',1) + diag(d)``` called ```SymEGRQSMatrix``` is also implemented. The usage is similar to that of ```SymEGRSSMatrix``` and can be created as follows
 ```julia
-julia> U, V = SymEGRSSMatrices.spline_kernel(Vector(0.1:0.01:1), 2); # Creating input such that K is PD
+julia> U, V = spline_kernel(Vector(0.1:0.01:1), 2); # Creating input such that K is PD
 julia> K = SymEGRQSMatrix(U,V,rand(size(U,1)); # Symmetric EGRSS matrix + diagonal
 ```
 The Cholesky factorization of this matrix can be computed using ```cholesky```. Note however here that ```L``` represents a matrix of the form ```L = tril(UW',-1) + diag(c)```
