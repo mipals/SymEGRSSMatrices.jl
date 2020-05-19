@@ -55,8 +55,8 @@ function symegrss_mul!(Y::AbstractVecOrMat{T}, K::SymEGRSSMatrix{Q,UT,VT},
 end
 
 
-logdet(K::SymEGRSSMatrix) = logdet(cholesky(K))
-det(K::SymEGRSSMatrix) = det(cholesky(K))
+logdet(K::SymEGRSSMatrix) = 2.0*logdet(cholesky(K))
+det(K::SymEGRSSMatrix) = det(cholesky(K))^2
 
 
 #### Matrix-matrix product ####

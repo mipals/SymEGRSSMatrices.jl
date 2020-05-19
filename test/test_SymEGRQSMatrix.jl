@@ -2,9 +2,9 @@
 t = Vector(0.1:0.1:100); p = 2;
 
 # Creating generators U,V that result in a positive-definite matrix Σ
-U, V = spline_kernel(t, p)
+Ut, Vt = spline_kernel(t', p)
 
-K = SymEGRQSMatrix(copy(U'),copy(V'),ones(size(U,1)))
+K = SymEGRQSMatrix(Ut,Vt,ones(size(Ut,2)))
 x = randn(size(K,1))
 Kfull = Matrix(K)
 

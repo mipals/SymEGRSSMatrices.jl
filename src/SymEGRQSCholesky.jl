@@ -192,7 +192,7 @@ end
 #### Log-determinant ####
 function logdet(K::SymEGRQSCholesky)
 	dd = sum(log.(K.d))
-    return dd + dd
+    return dd
 end
 
 #### Determinant ####

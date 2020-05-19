@@ -75,8 +75,7 @@ function ss_forward!(X::AbstractArray, Ut::AbstractArray,
     p, n = size(Ut)
     mx = size(B,2)
     Wbar = zeros(p, mx);
-    #@inbounds for i = 1:n
-	for i = 1:n
+    @inbounds for i = 1:n
         tmpU = Ut[:,i]
         tmpW = Wt[:,i]
         X[i,:] = (B[i:i,:] - tmpU'*Wbar)./(tmpU'*tmpW);
@@ -90,8 +89,7 @@ function ssa_backward!(X::AbstractArray, Ut::AbstractArray,
     p, n = size(Ut)
     mx = size(B,2)
     Ubar = zeros(p,mx);
-    #@inbounds for i = n:-1:1
-	for i = n:-1:1
+    @inbounds for i = n:-1:1
         tmpU = Ut[:,i];
         tmpW = Wt[:,i];
         X[i,:] = (B[i:i,:] - tmpW'*Ubar)/(tmpU'*tmpW);
@@ -99,24 +97,44 @@ function ssa_backward!(X::AbstractArray, Ut::AbstractArray,
     end
 end
 
-function (\)(F::SymEGRSSCholesky, B::AbstractVecOrMat)
-	X = similar(B)
-	ss_forward!(X,F.Ut,F.Wt,B)
-	return X
+
+#### Triangular product (Lx) ####
+function ss_tri_mul!(Y::AbstractArray,K::SymEGRSSCholesky,X::AbstractArray)
+     p, n = size(K.Ut);
+     mx = size(X,2);
+     Wbar = zeros(p,mx);
+     for i = 1:n
+         tmpW   = K.Wt[:,i]
+         tmpU   = K.Ut[:,i]
+         tmpX   = X[i:i,:]
+         Wbar  += tmpW .* tmpX;
+         Y[i,:] = Wbar'*tmpU;
+     end
+	 return Y
 end
-function (\)(F::Adjoint{<:Any,<:SymEGRSSCholesky}, B::AbstractVecOrMat)
-	Y = similar(B)
-	ssa_backward!(Y,F.parent.Ut,F.parent.Wt,B)
-	return Y
+#### Adjoint triangular product (L'x) ####
+function ssa_tri_mul!(Y::AbstractArray,K::SymEGRSSCholesky,X::AbstractArray)
+     p, n = size(K.Ut);
+	 mx = size(X,2);
+     Ubar = zeros(p,mx);
+     Ubar = Ubar + K.Ut*X;
+     for i = 1:n
+         tmpW = K.Wt[:,i]
+         tmpU = K.Ut[:,i]
+         tmpX = X[i:i,:]
+         Y[i,:] = Ubar'*tmpW;
+         Ubar  -= tmpU .* tmpX
+     end
+	 return Y
 end
 
 ########################################################################
-#### Linear Algebra routines 							   			####
+#### More linear Algebra routines 							   		####
 ########################################################################
 function det(L::SymEGRSSCholesky)
     dd = one(eltype(L))
     @inbounds for i in 1:L.n
-        dd *= dot(L.Ut[:,i],L.Wt[:,i])^2
+        dd *= dot(L.Ut[:,i],L.Wt[:,i])
     end
     return dd
 end
@@ -126,5 +144,21 @@ function logdet(L::SymEGRSSCholesky)
     @inbounds for i in 1:L.n
         dd += log(dot(L.Ut[:,i],L.Wt[:,i]))
     end
-    dd + dd # instead of 2.0dd which can change the type
+    dd
+end
+
+#
+mul!(y::AbstractVecOrMat, K::SymEGRSSCholesky, x::AbstractVecOrMat) =
+	ss_tri_mul!(y,K,x)
+mul!(y::AbstractVecOrMat, K::Adjoint{<:Any,<:SymEGRSSCholesky}, x::AbstractVecOrMat) =
+	ssa_tri_mul!(y,K.parent,x)
+function (\)(F::SymEGRSSCholesky, B::AbstractVecOrMat)
+	X = similar(B)
+	ss_forward!(X,F.Ut,F.Wt,B)
+	return X
+end
+function (\)(F::Adjoint{<:Any,<:SymEGRSSCholesky}, B::AbstractVecOrMat)
+	Y = similar(B)
+	ssa_backward!(Y,F.parent.Ut,F.parent.Wt,B)
+	return Y
 end

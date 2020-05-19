@@ -15,33 +15,12 @@ function alpha(p::Int)
     return a;
 end
 
-function spline_kernel(t::Array{Float64}, p::Int)
-
-    #TO-DO
-    # Check inputs
-    # Maybe the Vector(range) can be done more eleganly.
-
-    if all(diff(t) .> 0)
-        monotonic = 1;
-    elseif all(diff(t) .< 0)
-        monotonic = 0;
-    else
-        throw(DomainError("t is not strictly monotonic"));
-    end
-
-    if size(t,2) != 1 && size(t,1) == 1;
-        t = t';
-    end
+function spline_kernel(t::AbstractArray, p::Int)
 
     fp = factorial.(p-1:-1:0)
     a = alpha(p).*fp;
-    if monotonic == 1;
-        U = (repeat(t,1,p).^Vector(p-1:-1:0)')./fp';
-        V = (repeat(t,1,p).^Vector(p:2*p-1)').*a';
-    elseif monotonic == 0
-        U = (repeat(t,1,p).^Vector(p:2*p-1)')./fp';
-        V = (repeat(t,1,p).^Vector(p-1:-1:0)').*a';
-    end
+    Ut = (repeat(t,p,1).^Vector(p-1:-1:0))./fp;
+    Vt = (repeat(t,p,1).^Vector(p:2*p-1)).*a;
 
-    return U,V;
+    return Ut,Vt;
 end
