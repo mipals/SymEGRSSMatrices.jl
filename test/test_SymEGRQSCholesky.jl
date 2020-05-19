@@ -1,24 +1,22 @@
 # Removing t = 0, such that Σ is invertible
-t = Vector(0.1:0.1:10)
+n = 500.0;
+t = Vector(0.1:1/n:1)
 
 # Creating a test matrix Σ = tril(UV') + triu(VU',1) that is PSD
 p = 2;
 Ut, Vt = spline_kernel(t', p)
-# Creating a symmetric exended generator representable semiseperable matrix
 K  = SymEGRQSMatrix(Ut,Vt,ones(size(Ut,2)))
-# Creating a dense replica
 Σ    = Matrix(K)
 chol = cholesky(Σ)
-
-# Calculating its Cholesky factorization
 L = cholesky(K)
-# Creating a test vector
 x = randn(size(K,1))
 
 # Testing inverses (Using Cholesky factorizations)
 B = randn(length(t),10);
-@test L\B ≈ chol.L\B
+@test L\B  ≈ chol.L\B
 @test L'\B ≈ chol.U\B
+@test L*B  ≈ chol.L*B
+@test L'*B ≈ chol.U*B
 
 # Testing logdet
 @test logdet(L) ≈ logdet(chol.L)
@@ -37,3 +35,10 @@ M = SymEGRSSMatrix(Ut,Vt);
 @test L[3,1] ≈ chol.L[3,1]
 @test L[2,2] ≈ chol.L[2,2]
 @test L[1,3] ≈ chol.L[1,3]
+
+# Testing explicit-implicit-inverse
+Yt, Zt = SymEGRSSMatrices.dss_create_yz(L.Ut,L.Wt,L.d)
+@test tril(Yt'*Zt,-1) + Diagonal(L.d.^(-1)) ≈ inv(chol.L)
+@test L*(tril(Yt'*Zt,-1) + Diagonal(L.d.^(-1))) ≈ I
+@test L'*(triu(Zt'*Yt,1) + Diagonal(L.d.^(-1))) ≈ I
+@test SymEGRSSMatrices.squared_norm_cols(Yt,Zt,L.d.^(-1)) ≈ sum(inv(chol.L).^2,dims=1)'

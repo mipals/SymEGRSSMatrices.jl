@@ -50,6 +50,12 @@ function SymEGRQSCholesky(K::SymEGRSSMatrix{T,UT,VT}, σ::Number) where
 	SymEGRQSCholesky{T,typeof(K.Ut),typeof(Wt),typeof(dbar)}(K.Ut,Wt,dbar,K.n,K.p)
 end
 
+function SymEGRQSCholesky(Ut::UT, Wt::WT, d::AbstractArray) where
+	{T,UT<:AbstractMatrix,WT<:AbstractMatrix}
+	p, n = size(Ut);
+	SymEGRQSCholesky{eltype(Ut),typeof(Ut),typeof(Wt),typeof(d)}(Ut,Wt,d,n,p)
+end
+
 
 ########################################################################
 #### Helpful properties. Not nessecarily computionally efficient    ####
@@ -115,16 +121,34 @@ function dssa_backward!(X::AbstractArray,Ut::AbstractArray,Wt::AbstractArray,
     end
 end
 
-function (\)(F::SymEGRQSCholesky, B::AbstractVecOrMat)
-	X = similar(B)
-	dss_forward!(X,F.Ut,F.Wt,F.d,B)
-	return X
+#### Multiplying with L ####
+function dss_tri_mul!(Y::AbstractArray,K::SymEGRQSCholesky,X::AbstractArray)
+     p, n = size(K.Ut)
+     mx = size(X, 2)
+     Wbar = zeros(p, mx)
+     @inbounds for i = 1:n
+         tmpW = K.Wt[:,i]
+         tmpU = K.Ut[:,i]
+         tmpX = X[i:i,:];
+         Y[i,:] = tmpU'*Wbar + K.d[i]*tmpX;
+         Wbar  +=  tmpW*tmpX;
+     end
+	 return Y
 end
 
-function (\)(F::Adjoint{<:Any,<:SymEGRQSCholesky}, B::AbstractVecOrMat)
-	Y = similar(B)
-	dssa_backward!(Y,F.parent.Ut,F.parent.Wt,F.parent.d,B)
-	return Y
+#### Multiplying with L' ####
+function dssa_tri_mul!(Y::AbstractArray,K::SymEGRQSCholesky,X::AbstractArray)
+     p, n = size(K.Ut)
+     mx = size(X, 2)
+     Ubar = zeros(p,mx)
+     @inbounds for i = n:-1:1
+         tmpW = K.Wt[:,i]
+         tmpU = K.Ut[:,i]
+         tmpX = X[i:i,:]
+         Y[i,:] = tmpW'*Ubar + K.d[i]*tmpX;
+         Ubar = Ubar + tmpU*tmpX;
+     end
+	 return Y
 end
 
 
@@ -144,7 +168,7 @@ function squared_norm_cols(Ut::AbstractArray,Wt::AbstractArray,
 end
 #### Implicit inverse of  L = tril(UW',-1) + diag(dbar) ####
 function dss_create_yz(Ut::AbstractArray, Wt::AbstractArray,
-                    dbar::AbstractArray)
+                     dbar::AbstractArray)
     p, n = size(Ut)
     Y = zeros(n,p)
     Z = zeros(n,p)
@@ -198,4 +222,21 @@ end
 #### Determinant ####
 function det(K::SymEGRQSCholesky)
     return exp(logdet(K))
+end
+
+
+mul!(y::AbstractVecOrMat, K::SymEGRQSCholesky, x::AbstractVecOrMat) =
+	dss_tri_mul!(y,K,x)
+mul!(y::AbstractVecOrMat, K::Adjoint{<:Any,<:SymEGRQSCholesky}, x::AbstractVecOrMat) =
+	dssa_tri_mul!(y,K.parent,x)
+function (\)(F::SymEGRQSCholesky, B::AbstractVecOrMat)
+	X = similar(B)
+	dss_forward!(X,F.Ut,F.Wt,F.d,B)
+	return X
+end
+
+function (\)(F::Adjoint{<:Any,<:SymEGRQSCholesky}, B::AbstractVecOrMat)
+	Y = similar(B)
+	dssa_backward!(Y,F.parent.Ut,F.parent.Wt,F.parent.d,B)
+	return Y
 end
