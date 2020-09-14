@@ -8,14 +8,14 @@
 ## Description
 A package for efficiently computing with symmetric extended generator representable semiseparable matrices and a variant thereof. In short this means matrices of the form
 ```julia
-K = tril(U*V^T) + triu(VU^T,1)
+K = tril(U*V^T) + triu(V*U^T,1)
 ```
 
 as well as
 
 
 ```julia
-K = tril(U*V^T) + triu(VU^T,1) + diag(d)
+K = tril(U*V^T) + triu(V*U^T,1) + diag(d)
 ```
 
 All implemented algorithms (multiplication, Cholesky factorization, forward/backward substitution as well as various traces and determinants) run linear in time and memory w.r.t. to the number of data points ```n```.
