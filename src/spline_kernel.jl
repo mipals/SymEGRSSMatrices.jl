@@ -22,5 +22,5 @@ function spline_kernel(t::AbstractArray, p::Int)
     Ut = (repeat(t,p,1).^Vector(p-1:-1:0)')./fp';
     Vt = (repeat(t,p,1).^Vector(p:2*p-1)').*a';
 
-    return Ut,Vt;
+    return Ut',Vt';
 end
