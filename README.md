@@ -71,7 +71,7 @@ julia> K'*x
 Furthermore from the ```SymEGRSSMatrix``` structure we can efficiently compute the Cholesky factorization as
 ```julia 
 julia> L = cholesky(K); # Computing the Cholesky factorization of K
-julia> K*(L\x)
+julia> K*(L'\(L\x))
 91×1 Array{Float64,2}:
  1.0000000000000036
  0.9999999999999982
