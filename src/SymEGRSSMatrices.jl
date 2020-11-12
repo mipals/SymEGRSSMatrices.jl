@@ -7,7 +7,7 @@ import Base: \, inv, size, eltype, Matrix, getindex, getproperty
 
 export SymEGRSSMatrix, SymEGRSSCholesky,
        SymEGRQSMatrix, SymEGRQSCholesky,
-       trinv
+       trinv, cholesky, det, logdet
 
 # Matrices
 include("SymEGRSSMatrix.jl")
