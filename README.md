@@ -23,12 +23,16 @@ All implemented algorithms (multiplication, Cholesky factorization, forward/back
 A more in-depth descriptions of the algorithms can be found in [1] or [here](https://github.com/mipals/SmoothingSplines.jl/blob/master/mt_mikkel_paltorp.pdf).
 
 ## Usage
+Adding the package can be done through
+```
+(@v1.5) pkg> add https://github.com/mipals/SymEGRSSMatrices.jl
+```
 First we need to create generators U and V that represent the symmetric matrix, ```K = tril(UV') + triu(VU',1)``` as well a test vector ```x```.
 ```julia
 julia> using SymEGRSSMatrices
 julia> import SymEGRSSMatrices: spline_kernel
 julia> U, V = spline_kernel(Vector(0.1:0.01:1), 2); # Creating input such that K is PD
-julia> K = SymEGRSSMatrix(U,V); # Symmetric generator representable semiseparable matrix
+julia> K = SymEGRSSMatrix(copy(U),copy(V)); # Symmetric generator representable semiseparable matrix
 julia> x = ones(size(K,1)); # Test vector
 ```
 We can now compute products with ```K``` and ```K'```. The result are the same as ```K``` is symmetric.
